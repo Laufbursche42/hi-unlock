@@ -7,13 +7,13 @@
  * nothing goes to any server. Numeric dpIds, value ranges and scaling are cloud-provisioned (Tuya
  * SchemaBean) and the per-device localKey is cloud-side (issued at pairing; extract via Frida or
  * the Tuya IoT platform, never in the APK or a BLE capture), so both are user-supplied and gated -
- * never invented here. Source: Hitway/hitway_gesamtanalyse.md. NOTE: the Hitway SDK session-key KDF
+ * never invented here. NOTE: the Hitway SDK session-key KDF
  * is obfuscated in the decompiled code; only the inputs are confirmed (localKey + 6-byte srand +
  * 32-byte authKey). The secretKey5 = MD5(localKey || srand) form below is the Tuya-standard
  * candidate, shown but flagged unverified for the H11 - writes stay gated regardless.
  */
 
-const BUILD = 'v1';
+const BUILD = 'v2';
 const $ = (id) => document.getElementById(id);
 
 const LS = {
@@ -64,7 +64,7 @@ const state = {
 };
 
 // --------------------------- log + redaction (lb-tool-web style; copy/save use the same text) ---------------------------
-function ts() { return new Date().toISOString().slice(11, 19); }   // HH:MM:SS
+function ts() { return new Date().toTimeString().slice(0, 8); }   // HH:MM:SS
 function redact(text) {
   let s = String(text);
   if (state.deviceId) s = s.split(state.deviceId).join('[redacted-id]');
@@ -102,15 +102,19 @@ function renderLog() {
   });
   pre.scrollTop = pre.scrollHeight;
 }
-function logHeader() {
+function logDiagnosticHeader() {
   const nav = (typeof navigator !== 'undefined') ? navigator : {};
   log('=== hi-unlock diagnostic ===');
   log('build: ' + BUILD);
+  log('time: ' + new Date().toISOString());
+  log('userAgent: ' + (nav.userAgent || '?'));
+  log('platform: ' + (nav.platform || '?'));
   log('webBluetooth: ' + (nav.bluetooth ? 'yes' : 'no'));
-  log('speechSynthesis: ' + ((typeof speechSynthesis !== 'undefined') ? 'yes' : 'no'));
-  log('============================');
+  log('protocol self-test: ' + (FRAME_OK ? 'OK' : 'FAILED'));
+  if (!FRAME_OK) log('protocol self-test FAILED: crypto/frame vectors did not reproduce', 'log-err');
+  log('================================');
 }
-function clearLog() { state.logBuffer = []; const pre = $('log'); if (pre) pre.textContent = ''; logHeader(); log('log cleared'); }
+function clearLog() { state.logBuffer = []; const pre = $('log'); if (pre) pre.textContent = ''; logDiagnosticHeader(); log('log cleared'); }
 async function copyLog() {
   const text = state.logBuffer.map((e) => anonymize(e.raw)).join('\n');
   let ok = false;
@@ -313,13 +317,39 @@ function buildDpCommand(seq, dpFrames, sessionKey, version) {
 }
 const deriveSecretKey5 = (lk, sr) => md5(concatBytes(lk, sr));
 
+// load-time self-test: the page's own AES must reproduce the FIPS-197 AES-128-ECB known-answer
+// vector (both directions), crc16Modbus must hit the CRC-16/MODBUS catalogue check value, and a
+// frame built by buildInnerFrame/encodeDp must re-validate its own CRC trailer and survive the
+// AES/ECB outer-layer round-trip. No hand-written expected frame: every expected value is sourced.
+const FRAME_OK = (function () {
+  try {
+    const eqHex = (bytes, h) => hex(bytes).split(' ').join('') === h;
+    // (1) FIPS-197 Appendix C.1 AES-128-ECB KAT (NIST FIPS PUB 197, also RFC 3602 test):
+    //     PT 00112233445566778899aabbccddeeff, KEY 000102030405060708090a0b0c0d0e0f -> CT 69c4e0d8...
+    const pt = hexToBytes('00112233445566778899aabbccddeeff');
+    const key = hexToBytes('000102030405060708090a0b0c0d0e0f');
+    const ct = AES.encryptEcb(pt, key, false);
+    const aesEnc = eqHex(ct, '69c4e0d86a7b0430d8cdb78070b4c55a');
+    const aesDec = hex(AES.decryptEcb(ct, key)) === hex(pt);          // AES round-trip
+    // (2) CRC-16/MODBUS catalogue check value (CRC RevEng): ASCII "123456789" -> 0x4B37
+    const crcOk = crc16Modbus(strToBytes('123456789')) === 0x4b37;
+    // (3) DP/CRC framing round-trip: a frame built by the page re-validates its own CRC-16 trailer
+    const inner = buildInnerFrame(7, CMD_DPS, 0x00, encodeDp(1, DP_TYPE.bool, 1, 3));
+    const trailer = (inner[inner.length - 2] << 8) | inner[inner.length - 1];
+    const frameCrcOk = crc16Modbus(inner.subarray(0, inner.length - 2)) === trailer;
+    // (4) AES/ECB outer-layer round-trip of that real built frame
+    const roundTrip = hex(AES.decryptEcb(AES.encryptEcb(inner, key, true), key).subarray(0, inner.length)) === hex(inner);
+    return aesEnc && aesDec && crcOk && frameCrcOk && roundTrip;
+  } catch (e) { return false; }
+})();
+
 // --------------------------- DP catalog + model registry (Hitway H11) ---------------------------
 // DP CODE names are the ones proven referenced in the Hitway H11 APK assets (od_dsl_dpc.json +
 // outdoor panel main.js) and the Tuya BLE report path. Every numeric dpId, enum range, scale and
 // unit is cloud-provisioned (Tuya SchemaBean) and absent from the APK = UNKNOWN, so `type` here is
 // the app-observed wire type (best candidate) only; nothing numeric is invented. group tags the
-// battery fields. Source: hitway_gesamtanalyse.md sections 2 + 4. The section 4.4 sample values
-// (max_speed id=104, speed_limit_enum id=105) are explicit PLACEHOLDERS and are NOT used here.
+// battery fields. The sample values (max_speed id=104, speed_limit_enum id=105) seen in the app
+// assets are explicit PLACEHOLDERS and are NOT used here.
 const DP_CATALOG = {
   speed:                { type: 'value',  group: 'ride' },
   dp_speed:             { type: 'value',  group: 'ride' },
@@ -752,15 +782,14 @@ function fillRows(container, codes) {
 function updateGates() {
   const p = profile();
   const conn = state.connected;
-  // Hide everything device-specific until the scooter is connected: only after a link do we
-  // know what it actually reports, so schema/keys/telemetry/settings are not front-loaded.
-  { const c = $('telemetry-card'); if (c) c.hidden = !p.telemetry.length || !conn; }
-  { const c = $('settings-card');  if (c) c.hidden = !p.settings.length  || !conn; }
-  { const c = $('advanced-card');  if (c) c.hidden = !p.advanced.length  || !conn; }
-  { const c = $('boost-card');     if (c) c.hidden = !p.boost            || !conn; }
-  { const c = $('raw-card');       if (c) c.hidden = !p.ble              || !conn; }
-  { const c = $('keys-card');      if (c) c.hidden = !p.ble; }
-  { const c = $('schema-card');    if (c) c.hidden = !p.ble; }
+  // Canonical shell: on load only Intro + Verbindung + Log are visible; the telemetry/settings
+  // cards stay hidden until the scooter is connected, since only after a link do we know what it
+  // actually reports. live-card holds the telemetry grid, more-card the settings + sequencer,
+  // raw-card the advanced rows + raw DP write.
+  { const c = $('live-card'); if (c) c.hidden = !conn; }
+  { const c = $('batt-card'); if (c) c.hidden = !conn; }
+  { const c = $('more-card'); if (c) c.hidden = !conn; }
+  { const c = $('raw-card');  if (c) c.hidden = !conn; }
   { const el = $('preconnect-hint'); if (el) el.hidden = conn || !p.ble; }
   const ready = sessionReady();
   document.querySelectorAll('.dp-row').forEach((row) => {
@@ -848,25 +877,6 @@ async function seqSecure() {
 async function seqMode(which) {
   try { const p = modeParams(); const v = which===1?p.m1:which===2?p.m2:p.m3; await sendDp(p.dpId,p.dpType,v,p.pv,'mode'+which,true); }
   catch (e) { log('mode error: ' + e.message, 'log-err'); }
-}
-
-// --------------------------- diagnostics (scan all devices) ---------------------------
-async function scanAllDevicesDiagnostic() {
-  if (!navigator.bluetooth) { log('no Web Bluetooth', 'log-err'); return; }
-  try {
-    logHeader();
-    const d = await navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: [uuid16(TUYA.service), ALT.service] });
-    state.deviceId = d.id || '';
-    log('DIAG device: name=' + '\x01' + (d.name || '(none)') + '\x01' + ' id=' + '\x01' + d.id + '\x01');
-    const server = await d.gatt.connect();
-    const svcs = await server.getPrimaryServices();
-    for (const s of svcs) {
-      log('DIAG service ' + s.uuid);
-      try { const cs = await s.getCharacteristics(); for (const c of cs) log('DIAG   char ' + c.uuid); } catch (e) {}
-    }
-    log('DIAG done. Copy the log. For name plus manufacturer data use nRF Connect on Android.', 'log-ok');
-    try { d.gatt.disconnect(); } catch (e) {}
-  } catch (e) { log('DIAG error: ' + e.message, 'log-err'); }
 }
 
 // --------------------------- self-test ---------------------------
@@ -1062,7 +1072,7 @@ function initLangSwitch() {
 function applyTheme(dark) {
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
   const b = $('btn-theme');
-  if (b) { b.innerHTML = dark ? '&#9728;' : '&#9790;'; b.setAttribute('aria-label', t(dark ? 'themeToLight' : 'themeToDark')); b.title = b.getAttribute('aria-label'); } // scan-ok: fixed sun/moon glyph, not user input
+  if (b) { b.textContent = dark ? '\u2600' : '\u263E'; b.setAttribute('aria-label', t(dark ? 'themeToLight' : 'themeToDark')); b.title = b.getAttribute('aria-label'); }
   try { localStorage.setItem(LS.theme, dark ? 'dark' : 'light'); } catch (e) {}
 }
 function initTheme() {
@@ -1215,8 +1225,6 @@ window.addEventListener('DOMContentLoaded', () => {
   { const b = $('btn-copy-log'); if (b) b.addEventListener('click', copyLog); }
   { const b = $('btn-clear-log'); if (b) b.addEventListener('click', clearLog); }
   { const b = $('btn-save-log'); if (b) b.addEventListener('click', saveLog); }
-  { const b = $('btn-diag'); if (b) b.addEventListener('click', scanAllDevicesDiagnostic); }
-  { const b = $('btn-selftest'); if (b) b.addEventListener('click', runSelfTest); }
   {
     const cb = $('public-log');
     if (cb) { cb.checked = state.publicLog; cb.addEventListener('change', () => { state.publicLog = cb.checked; try { localStorage.setItem(LS.publicLog, cb.checked ? '1' : '0'); } catch (e) {} renderLog(); }); }
@@ -1233,6 +1241,5 @@ window.addEventListener('DOMContentLoaded', () => {
     { const b = $('confirm-x'); if (b) b.addEventListener('click', () => done(false)); }
   }
   setStatus(profile().ble ? 'disconnected' : 'no-ble');
-  logHeader();
-  runSelfTest();
+  logDiagnosticHeader();
 });

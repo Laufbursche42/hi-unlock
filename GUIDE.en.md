@@ -2,6 +2,8 @@
 
 This page talks over Web Bluetooth to a Hitway H11 e-scooter that runs on the Tuya white-label app (`com.hitway.ytd`). Pick your model, then connect. It is a feasibility study and stays honest about what already works and what still needs the real device.
 
+> **Important for error reports:** switch on the **Diagnostic log** at the bottom of the page *before* you connect to the scooter. Only then is the full connection handshake captured - and those are exactly the lines we need in a [ticket](https://github.com/Laufbursche42/Laufbursche42/issues) to reproduce a problem.
+
 ## What you need
 
 - A Hitway H11 that connects through the Tuya app. It advertises the Tuya BLE service `0xfd50`.
@@ -106,3 +108,6 @@ Unlike some other scooters, the H11 has **no documented boost trick**. This card
 ## Legal and safety
 
 Only on your own vehicle on private ground. Raising the speed removes the throttle limit, the road approval (ABE) lapses and riding on public roads is then not allowed. Riding a modified scooter in public traffic very likely constitutes criminal offences (driving without the required licence and a breach of the compulsory insurance act). Everything at your own risk.
+
+## Contribute
+Want to find out if and how tuning works on your scooter? Test this tool on your own vehicle and open a ticket on [GitHub](https://github.com/Laufbursche42/Laufbursche42/issues) - with your model and what worked (or did not). That way we figure out together what is possible on which model.
