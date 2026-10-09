@@ -13,7 +13,7 @@
  * candidate, shown but flagged unverified for the H11 - writes stay gated regardless.
  */
 
-const BUILD = 'v6';
+const BUILD = 'v7';
 const $ = (id) => document.getElementById(id);
 
 const LS = {
