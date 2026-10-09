@@ -13,7 +13,7 @@
  * candidate, shown but flagged unverified for the H11 - writes stay gated regardless.
  */
 
-const BUILD = 'v3';
+const BUILD = 'v4';
 const $ = (id) => document.getElementById(id);
 
 const LS = {
@@ -1227,11 +1227,15 @@ window.addEventListener('DOMContentLoaded', () => {
   { const b = $('btn-save-log'); if (b) b.addEventListener('click', saveLog); }
   {
     const cb = $('public-log');
-    if (cb) { cb.checked = state.publicLog; cb.addEventListener('change', () => { state.publicLog = cb.checked; try { localStorage.setItem(LS.publicLog, cb.checked ? '1' : '0'); } catch (e) {} renderLog(); }); }
+    if (cb) { cb.checked = state.publicLog; cb.addEventListener('change', () => { state.publicLog = cb.checked; try { localStorage.setItem(LS.publicLog, cb.checked ? '1' : '0'); } catch (e) {} log('public-log: ' + (cb.checked ? 'on (anonymizing device name/id)' : 'off')); renderLog(); }); }
   }
   {
     const cb = $('diag-log');
-    if (cb) { cb.checked = false; cb.addEventListener('change', () => { state.diag = cb.checked; log(state.diag ? 'diagnostics on' : 'diagnostics off', 'log-rx'); }); }
+    if (cb) { cb.checked = false; cb.addEventListener('change', () => { state.diag = cb.checked; log(state.diag ? 'diagnostics on' : 'diagnostics off', 'log-rx'); log('diag-log: ' + (cb.checked ? 'on' : 'off')); }); }
+  }
+  {
+    const cb = $('showall');
+    if (cb) cb.addEventListener('change', () => { log('show-all-frames: ' + (cb.checked ? 'on' : 'off')); renderLog(); });
   }
   {
     const dlg = $('confirm');
