@@ -136,7 +136,6 @@ window.I18N = {
 
     footGuide: "Anleitung",
     footDisclaimer: "Haftungsausschluss",
-    disclaimerText: "Dieses Werkzeug ist eine Machbarkeitsstudie - kein fertiges Produkt. Es gibt keine Gewährleistung und keine Garantie für fehlerfreien Betrieb. Ein Geschwindigkeits-Unlock über BLE ist am Hitway H11 nicht bewiesen: der harte Cap sitzt in der Controller-Firmware, der localKey und die dpIds sind cloud-seitig, und kein Schreibvorgang wurde am Gerät als wirksam nachgewiesen. Das Anheben der Geschwindigkeit hebt die Drossel auf: die ABE erlischt und der Betrieb auf öffentlichen Wegen ist dann nicht erlaubt. Nutzung ausschließlich am eigenen Fahrzeug und auf eigenes Risiko. Die Seite spricht nur lokal per Bluetooth mit dem Gerät - es werden keine Daten an einen Server gesendet. Hitway und Tuya sind Marken der jeweiligen Inhaber. Dieses Projekt ist unabhängig und mit keinem der beiden verbunden.",
     footSource: "Quellcode",
     footIssue: "Fehler melden",
     footReadme: "Readme",
@@ -336,7 +335,6 @@ window.I18N = {
 
     footGuide: "Guide",
     footDisclaimer: "Disclaimer",
-    disclaimerText: "This tool is a feasibility study, not a finished product. There is no warranty and no guarantee of error-free operation. A speed unlock over BLE is not proven on the Hitway H11: the hard cap sits in the controller firmware, the localKey and dpIds are cloud-side, and no write has been shown to take effect on the device. Raising the speed removes the throttle: the type approval becomes void and riding on public roads is then not allowed. Use only on your own vehicle and at your own risk. The page talks to the device locally over Bluetooth only, no data is sent to any server. Hitway and Tuya are trademarks of their respective owners. This project is independent and not affiliated with either.",
     footSource: "Source",
     footIssue: "Report an issue",
     footReadme: "Readme",
