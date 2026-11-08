@@ -8,13 +8,13 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
-<link rel="stylesheet" href="styles.css?v=10">
+<link rel="stylesheet" href="styles.css?v=11">
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1f2a3915448b4b68b4380423f2be4b09"}'></script><!-- scan-ok: Cloudflare Web Analytics beacon (token starts 1f2a39 ends 4b09); cookieless aggregate page metrics, see PRIVACY -->
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>Laufbursche <span data-t="brandSub"></span></h1>
+    <h1>Laufbursche <span data-t="brandSub">Hitway Tool</span></h1>
     <div class="head-right">
       <span class="status" id="status" data-state="disconnected">disconnected</span>
       <div class="head-tools">
@@ -27,29 +27,29 @@
     </div>
   </header>
 
-  <div class="sunset-banner" role="alert" data-t="tuyaNoticeHtml"></div>
+  <div class="sunset-banner" role="alert" data-t="tuyaNoticeHtml"><b>Tuya-Gerät.</b> Dieses Gerät läuft über das Tuya-Backend, das wir nicht unterstützen. Diese Seite bleibt eine Machbarkeitsstudie ohne nutzbares Tuning.</div>
 
-  <p class="warn" id="platform-note" data-t="platformNote" hidden></p>
+  <p class="warn" id="platform-note" data-t="platformNote" hidden>Dieser Browser kann kein Web Bluetooth. Nutze Chrome oder Edge (Android/Desktop) oder Bluefy (iOS).</p>
 
   <div class="card">
-    <h2 data-t="s1Title"></h2>
-    <p class="hint" data-t="sub"></p>
-    <p class="hint" data-t="startHintGuide"></p>
-    <p class="warn" data-t="expWarn"></p>
-    <p class="hint" data-t="ownDevice"></p>
+    <h2 data-t="s1Title">So fängt es an</h2>
+    <p class="hint" data-t="sub">Live über Web Bluetooth mit einem Hitway H11 reden der über die Tuya-App (com.hitway.ytd) läuft. Läuft in Chrome oder Edge (Android/Desktop) und in Bluefy (iOS). Nichts verlässt dein Gerät.</p>
+    <p class="hint" data-t="startHintGuide">Neu hier? In der <a href="GUIDE.de.md" data-doc="GUIDE" data-t="footGuide">Anleitung</a> steht jeder Schritt und die ehrliche Einordnung was heute schon geht und was das Gerät noch braucht.</p>
+    <p class="warn" data-t="expWarn">Machbarkeitsstudie: Diese Seite zeigt, was das Bluetooth-Protokoll eines Hitway-E-Scooters technisch möglich macht. Sie ist kein fertiges Produkt. Es gibt keine Gewährleistung. Alles was du hier tust, tust du auf eigenes Risiko. <a href="#" data-open-disclaimer>Haftungsausschluss lesen</a>.</p>
+    <p class="hint" data-t="ownDevice">Nur am eigenen Fahrzeug auf privatem Gelände. Das Anheben der Höchstgeschwindigkeit hebt die Drossel auf, die ABE erlischt und der Betrieb auf öffentlichen Wegen ist dann nicht erlaubt.</p>
   </div>
 
   <div class="card">
-    <h2 data-t="modelTitle"></h2>
+    <h2 data-t="modelTitle">Modell und Verbindung</h2>
     <div class="log-opt">
-      <span data-t="showallLabel"></span>
+      <span data-t="showallLabel">Alle Geräte zeigen (wenn deins nicht auftaucht)</span>
       <input type="checkbox" id="showall">
     </div>
     <div class="set-row">
-      <label data-t="lblModel"></label>
+      <label data-t="lblModel">Modell</label>
       <select id="model-in">
-        <option value="auto" data-t="modelAuto"></option>
-        <option value="h11" data-t="modelH11"></option>
+        <option value="auto" data-t="modelAuto">Auto / Generischer Hitway (Tuya)</option>
+        <option value="h11" data-t="modelH11">Hitway H11 (Dual-Drive)</option>
       </select>
     </div>
     <p class="hint" id="model-hint"></p>
@@ -58,187 +58,187 @@
       <button class="primary span2" id="btn-conn"></button>
     </div>
     <p class="hint" id="devinfo"></p>
-    <p class="hint" data-t="connHint"></p>
-    <p class="hint" id="preconnect-hint" data-t="preconnectHint" hidden></p>
+    <p class="hint" data-t="connHint">Scooter einschalten - dann Verbinden. Die Seite sucht Geräte mit dem Tuya-Dienst 0xfd50 (Ersatz 0x1910) verbindet und hört die Notifications ab. Web Bluetooth geht auf dem iPhone nur über Bluefy - auf Android oder Desktop über Chrome oder Edge.</p>
+    <p class="hint" id="preconnect-hint" data-t="preconnectHint" hidden>Verbinde deinen Scooter - danach erscheinen Live-Werte, Einstellungen und erweiterte Einstellungen. localKey, srand und Schema kannst du jederzeit eintragen (optional).</p>
 
     <hr class="sep">
-    <div class="card-head"><label data-t="lblLocalKey"></label><button type="button" class="help-btn" data-help="key" aria-label="?">?</button></div>
+    <div class="card-head"><label data-t="lblLocalKey">localKey (16 Zeichen oder Hex)</label><button type="button" class="help-btn" data-help="key" aria-label="?">?</button></div>
     <div class="set-row">
       <input id="localkey-in" type="text" autocomplete="off" spellcheck="false" placeholder="a1b2c3d4e5f60718">
     </div>
     <div class="set-row">
-      <label data-t="lblSrand"></label>
+      <label data-t="lblSrand">srand (Hex, aus dem Log)</label>
       <input id="srand-in" type="text" autocomplete="off" spellcheck="false" placeholder="1a2b3c4d5e6f">
     </div>
-    <p class="hint"><span data-t="derivedPrefix"></span> <b id="derived-key">-</b></p>
-    <p class="hint" data-t="keyHint"></p>
+    <p class="hint"><span data-t="derivedPrefix">secretKey5 (Kandidat):</span> <b id="derived-key">-</b></p>
+    <p class="hint" data-t="keyHint">Ohne localKey kann die Seite keinen gültigen DP-Frame verschlüsseln. Der srand steht nach dem Verbinden im Log (Device-Info-Notification) und ist hier einzutragen. Die genaue KDF des Hitway ist verschleiert; secretKey5 ist der Tuya-Standard-Kandidat und am Gerät zu prüfen.</p>
 
     <div class="set-col">
-      <div class="card-head"><label data-t="lblLogUpload"></label><button type="button" class="help-btn" data-help="logupload" aria-label="?">?</button></div>
+      <div class="card-head"><label data-t="lblLogUpload">Bluetooth-Log auswerten</label><button type="button" class="help-btn" data-help="logupload" aria-label="?">?</button></div>
       <div class="file-field">
-        <label class="file-btn"><input type="file" id="log-in" accept=".log,.gz,.zip,.txt,application/zip,application/gzip" hidden><span data-t="fileChoose"></span></label>
+        <label class="file-btn"><input type="file" id="log-in" accept=".log,.gz,.zip,.txt,application/zip,application/gzip" hidden><span data-t="fileChoose">Datei wählen</span></label>
         <span id="log-name" class="file-name"></span>
       </div>
     </div>
-    <p class="hint" data-t="logUploadHint"></p>
+    <p class="hint" data-t="logUploadHint">Optional. Lädt einen BLE-Mitschnitt (btsnoop .log, .gz, Android-Fehlerbericht .zip oder Hex-Text) und sucht rein lokal nach srand- und dpId-Kandidaten. Nichts wird hochgeladen. Die Fundstellen erscheinen im Log - zum Eintragen in srand und Schema. Der localKey steckt nicht im BLE-Verkehr, er kommt aus der Tuya-Cloud.</p>
 
     <div class="set-col">
-      <div class="card-head"><label data-t="schemaTitle"></label><button type="button" class="help-btn" data-help="schema" aria-label="?">?</button></div>
+      <div class="card-head"><label data-t="schemaTitle">Geräteschema</label><button type="button" class="help-btn" data-help="schema" aria-label="?">?</button></div>
       <textarea id="schema-in" rows="3" autocomplete="off" spellcheck="false" data-t-ph="schemaPh"></textarea>
     </div>
     <div class="btns">
-      <button type="button" id="btn-load-schema" data-t="btnLoadSchema"></button>
-      <button type="button" id="btn-clear-schema" data-t="btnClearSchema"></button>
+      <button type="button" id="btn-load-schema" data-t="btnLoadSchema">Schema laden</button>
+      <button type="button" id="btn-clear-schema" data-t="btnClearSchema">Schema leeren</button>
     </div>
-    <p class="hint" data-t="schemaHint"></p>
+    <p class="hint" data-t="schemaHint">Optional. Nach dem Verbinden erscheinen die rohen Datenpunkte deines Scooters im Log (dpId + Wert). Das Schema ist nur die Beschriftung dazu - welche dpId speed_limit_enum oder work_mode ist - und kommt aus einem BLE-Mitschnitt oder dem Tuya-Cloud-Produktschema, nicht aus der App. Ohne Schema siehst du die Werte roh; Benennen und Schreiben bleibt gesperrt. Nichts wird erfunden.</p>
   </div>
 
   <div class="card" id="live-card" hidden>
-    <h2 data-t="telemetryTitle"></h2>
+    <h2 data-t="telemetryTitle">Live-Werte</h2>
     <div class="grid" id="telemetry-grid"></div>
-    <p class="hint" data-t="telemetryHint"></p>
+    <p class="hint" data-t="telemetryHint">Nach dem Verbinden füllen sich diese Kacheln mit den Werten vom Roller. Mit Schema bekommen sie Beschriftung und Einheit, ohne Schema bleiben sie roh, aber sichtbar. Die genaue Umrechnung (z.B. 0,1 km/h) kommt aus der Cloud und liegt hier nicht vor.</p>
   </div>
 
   <div class="card" id="batt-card" hidden>
-    <h2 data-t="battTitle"></h2>
-    <p class="hint" data-t="battHint"></p>
+    <h2 data-t="battTitle">Akku-Telemetrie</h2>
+    <p class="hint" data-t="battHint">Die Akku-Werte (Ladestand, Spannung, Strom, Temperatur) erscheinen oben bei den Live-Werten, sobald der Roller sie meldet - beim Hitway laufen sie im selben DP-Bericht. Ein Strich bedeutet: dieser Wert kam noch nicht.</p>
   </div>
 
   <div class="card" id="more-card" hidden>
-    <h2 data-t="settingsTitle"></h2>
-    <p class="hint" data-t="settingsHint"></p>
+    <h2 data-t="settingsTitle">Einstellungen</h2>
+    <p class="hint" data-t="settingsHint">Gewöhnliche Tuya-Einstellungen. Jede Zeile bleibt gesperrt bis ihre dpId im Schema steht und die Sitzung bereit ist.</p>
 
-    <h3 class="set-group" data-t="setgrpSpeed"></h3>
+    <h3 class="set-group" data-t="setgrpSpeed">Tempo und Freischaltung</h3>
     <div class="dp-rows" id="settings-rows"></div>
 
-    <h3 class="set-group" data-t="setgrpGeneral"></h3>
-    <div class="card-head"><h2 data-t="boostTitle"></h2><button type="button" class="help-btn" data-help="boost" aria-label="?">?</button></div>
-    <p class="warn" data-t="boostWarn"></p>
+    <h3 class="set-group" data-t="setgrpGeneral">Allgemein</h3>
+    <div class="card-head"><h2 data-t="boostTitle">Fahrmodus-Sequenzer</h2><button type="button" class="help-btn" data-help="boost" aria-label="?">?</button></div>
+    <p class="warn" data-t="boostWarn">Beim H11 gibt es keinen Boost-Trick. Diese Karte schaltet nur den Fahrmodus (work_mode) per Bluetooth um. Die harte Tempo-Grenze sitzt in der Steuerung des Rollers, nicht in einer Bluetooth-Einstellung. Über Bluetooth lässt sie sich nicht anheben. Gas gibt und hält weiter der Fahrer.</p>
     <div class="set-row">
-      <label data-t="lblModeDpId"></label>
+      <label data-t="lblModeDpId">Modus-dpId</label>
       <input id="mode-dpid" type="number" min="1" max="255" placeholder="104">
     </div>
     <div class="set-row">
-      <label data-t="lblModeType"></label>
+      <label data-t="lblModeType">Modus-dpType</label>
       <select id="mode-dptype">
-        <option value="enum" data-t="dtEnum"></option>
-        <option value="value" data-t="dtValue"></option>
+        <option value="enum" data-t="dtEnum">enum (1 Byte Index)</option>
+        <option value="value" data-t="dtValue">value (4 Byte int)</option>
       </select>
     </div>
     <div class="set-row">
-      <label data-t="lblM1"></label>
+      <label data-t="lblM1">Wert Mode 1 (langsam)</label>
       <input id="mode-v1" type="number" value="0">
     </div>
     <div class="set-row">
-      <label data-t="lblM3"></label>
+      <label data-t="lblM3">Wert Mode 3 (schnell)</label>
       <input id="mode-v3" type="number" value="2">
     </div>
     <div class="set-row">
-      <label data-t="lblM2"></label>
+      <label data-t="lblM2">Wert Mode 2 (mittel)</label>
       <input id="mode-v2" type="number" value="1">
     </div>
     <div class="set-row">
-      <label data-t="lblHoldMs"></label>
+      <label data-t="lblHoldMs">Haltezeit Mode 1 (ms)</label>
       <input id="boost-delay" type="number" value="700">
     </div>
     <div class="set-row">
-      <label data-t="lblVoice"></label>
-      <select id="voice-in"><option value="1" data-t="optOn"></option><option value="0" data-t="optOff"></option></select>
+      <label data-t="lblVoice">Sprachansage</label>
+      <select id="voice-in"><option value="1" data-t="optOn">An</option><option value="0" data-t="optOff">Aus</option></select>
     </div>
     <div class="btns">
-      <button class="primary span2" id="btn-auto" data-t="btnAuto"></button>
+      <button class="primary span2" id="btn-auto" data-t="btnAuto">Auto-Sequenz mit Ansage</button>
     </div>
     <div class="btns">
-      <button id="btn-boost" data-t="btnBoost"></button>
-      <button id="btn-secure" data-t="btnSecure"></button>
+      <button id="btn-boost" data-t="btnBoost">Sequenz (1 dann 3)</button>
+      <button id="btn-secure" data-t="btnSecure">Sichern (2 dann 3)</button>
     </div>
     <div class="btns">
-      <button id="btn-mode1" data-t="btnMode1"></button>
-      <button id="btn-mode2" data-t="btnMode2"></button>
-      <button id="btn-mode3" data-t="btnMode3"></button>
+      <button id="btn-mode1" data-t="btnMode1">Mode 1</button>
+      <button id="btn-mode2" data-t="btnMode2">Mode 2</button>
+      <button id="btn-mode3" data-t="btnMode3">Mode 3</button>
     </div>
-    <p class="hint" data-t="boostHint"></p>
+    <p class="hint" data-t="boostHint">Ablauf: du stehst bereit tippst einmal auf Auto-Sequenz danach folgst du nur noch der Ansage fürs Gas. Loslassen oder Bremsen setzt alles zurück - nichts wird dauerhaft gespeichert.</p>
   </div>
 
   <div class="card" id="raw-card" hidden>
-    <div class="card-head"><h2 data-t="rawTitle"></h2><button type="button" class="help-btn" data-help="raw" aria-label="?">?</button></div>
-    <p class="warn" data-t="advancedWarn"></p>
+    <div class="card-head"><h2 data-t="rawTitle">Roh-DP schreiben</h2><button type="button" class="help-btn" data-help="raw" aria-label="?">?</button></div>
+    <p class="warn" data-t="advancedWarn">Tiefere und riskantere DPs (Sperren, Alarm, Auto-Entsperren, BLE-Performance). Es gibt keinen versteckten Entwicklermodus - die Cloud entscheidet was schreibbar ist.</p>
 
-    <h3 class="set-group" data-t="advancedTitle"></h3>
+    <h3 class="set-group" data-t="advancedTitle">Erweiterte Einstellungen</h3>
     <div class="dp-rows" id="advanced-rows"></div>
-    <p class="hint" data-t="advancedHint"></p>
+    <p class="hint" data-t="advancedHint">Auch hier gilt: erst mit dpId aus dem Schema und bereiter Sitzung wird eine Zeile aktiv. Riskante Schreibvorgänge fragen zusätzlich nach.</p>
 
     <hr class="sep">
     <div class="set-row">
-      <label data-t="lblDpId"></label>
+      <label data-t="lblDpId">dpId (1..255)</label>
       <input id="dpid-in" type="number" min="1" max="255" placeholder="104">
     </div>
     <div class="set-row">
-      <label data-t="lblDpType"></label>
+      <label data-t="lblDpType">dpType</label>
       <select id="dptype-in">
-        <option value="value" data-t="dtValue"></option>
-        <option value="enum" data-t="dtEnum"></option>
-        <option value="bool" data-t="dtBool"></option>
-        <option value="string" data-t="dtString"></option>
-        <option value="raw" data-t="dtRaw"></option>
+        <option value="value" data-t="dtValue">value (4 Byte int)</option>
+        <option value="enum" data-t="dtEnum">enum (1 Byte Index)</option>
+        <option value="bool" data-t="dtBool">bool (0/1)</option>
+        <option value="string" data-t="dtString">string (Text)</option>
+        <option value="raw" data-t="dtRaw">raw (Hex)</option>
       </select>
     </div>
     <div class="set-row">
-      <label data-t="lblValue"></label>
+      <label data-t="lblValue">Wert</label>
       <input id="dpval-in" type="text" placeholder="25">
     </div>
     <div class="set-row">
-      <label data-t="lblPv"></label>
+      <label data-t="lblPv">Protokollversion</label>
       <select id="pv-in">
-        <option value="3" data-t="pv3"></option>
-        <option value="4" data-t="pv4"></option>
-        <option value="5" data-t="pv5"></option>
+        <option value="3" data-t="pv3">3 (Länge 1 Byte)</option>
+        <option value="4" data-t="pv4">4 (Länge 2 Byte BE)</option>
+        <option value="5" data-t="pv5">5 (DP-Kanal secretKey5)</option>
       </select>
     </div>
     <div class="set-row">
-      <label data-t="lblArm"></label>
-      <select id="arm-in"><option value="0" data-t="armPreview"></option><option value="1" data-t="armLive"></option></select>
+      <label data-t="lblArm">Modus</label>
+      <select id="arm-in"><option value="0" data-t="armPreview">Vorschau (nur rechnen)</option><option value="1" data-t="armLive">Scharf (wirklich senden)</option></select>
     </div>
     <div class="btns">
-      <button class="primary span2" id="btn-sendspeed" data-t="btnBuildSend"></button>
+      <button class="primary span2" id="btn-sendspeed" data-t="btnBuildSend">Frame bauen / senden</button>
     </div>
-    <p class="hint" data-t="rawHint"></p>
+    <p class="hint" data-t="rawHint">In der Vorschau wird der Frame nur berechnet und ins Log geschrieben. Scharf sendet ihn an den Scooter. Kappe frei: die ABE erlischt.</p>
   </div>
 
   <div class="card">
-    <h2 data-t="s6Title"></h2>
+    <h2 data-t="s6Title">Protokoll-Log</h2>
     <div class="log-opts">
       <div class="log-opt">
-        <span data-t="publicLogLabel"></span>
+        <span data-t="publicLogLabel">Öffentliches Log (Gerätename/ID anonymisieren)</span>
         <input type="checkbox" id="public-log" checked>
         <button type="button" class="help-btn" data-help="publiclog" aria-label="?">?</button>
       </div>
       <div class="log-opt">
-        <span data-t="diagLogLabel"></span>
+        <span data-t="diagLogLabel">Diagnose-Log</span>
         <input type="checkbox" id="diag-log">
         <button type="button" class="help-btn" data-help="diaglog" aria-label="?">?</button>
       </div>
     </div>
     <div class="btns">
-      <button type="button" id="btn-copy-log" data-t="btnCopyLog"></button>
-      <button type="button" id="btn-clear-log" data-t="btnClearLog"></button>
-      <button type="button" id="btn-save-log" class="span2" data-t="btnSaveLog"></button>
+      <button type="button" id="btn-copy-log" data-t="btnCopyLog">Kopieren</button>
+      <button type="button" id="btn-clear-log" data-t="btnClearLog">Leeren</button>
+      <button type="button" id="btn-save-log" class="span2" data-t="btnSaveLog">Speichern</button>
     </div>
     <pre id="log"></pre>
-    <p class="hint"><span class="log-tx" data-t="logTxLegend"></span>, <span class="log-rx" data-t="logRxLegend"></span></p>
+    <p class="hint"><span class="log-tx" data-t="logTxLegend">gesendet</span>, <span class="log-rx" data-t="logRxLegend">empfangen</span></p>
   </div>
 
   <footer class="foot">
     <span class="foot-links">
-      <a id="link-guide" href="GUIDE.de.md" data-doc="GUIDE" data-t="footGuide"></a>
-      <a href="https://github.com/Laufbursche42/hi-unlock" target="_blank" rel="noopener" data-t="footSource"></a>
-      <a id="link-readme" href="README.md" data-doc="README" data-t="footReadme"></a>
-      <a id="link-disclaimer" href="#" data-t="footDisclaimer"></a>
-      <a id="link-license" href="LICENSE.de.md" data-doc="LICENSE" data-t="footLicense"></a>
-      <a id="link-privacy" href="PRIVACY.de.md" data-doc="PRIVACY" data-t="footPrivacy"></a>
-      <a id="link-trademarks" href="TRADEMARKS.de.md" data-doc="TRADEMARKS" data-t="footTrademarks"></a>
+      <a id="link-guide" href="GUIDE.de.md" data-doc="GUIDE" data-t="footGuide">Anleitung</a>
+      <a href="https://github.com/Laufbursche42/hi-unlock" target="_blank" rel="noopener" data-t="footSource">Quellcode</a>
+      <a id="link-readme" href="README.md" data-doc="README" data-t="footReadme">Readme</a>
+      <a id="link-disclaimer" href="#" data-t="footDisclaimer">Haftungsausschluss</a>
+      <a id="link-license" href="LICENSE.de.md" data-doc="LICENSE" data-t="footLicense">Lizenz</a>
+      <a id="link-privacy" href="PRIVACY.de.md" data-doc="PRIVACY" data-t="footPrivacy">Datenschutz</a>
+      <a id="link-trademarks" href="TRADEMARKS.de.md" data-doc="TRADEMARKS" data-t="footTrademarks">Marken</a>
     </span>
-    <span class="foot-links"><span class="ver" id="build-ver"></span><a href="https://github.com/Laufbursche42/Laufbursche42/issues" target="_blank" rel="noopener" data-t="footIssue"></a></span>
+    <span class="foot-links"><span class="ver" id="build-ver"></span><a href="https://github.com/Laufbursche42/Laufbursche42/issues" target="_blank" rel="noopener" data-t="footIssue">Fehler melden</a></span>
     <a class="foot-copy" href="https://laufbursche42.github.io/Laufbursche42/" target="_blank" rel="noopener">Copyright (c) 2026 Laufbursche</a>
   </footer>
 </div>
@@ -250,7 +250,7 @@
   </div>
   <div class="doc-body" id="doc-body"></div>
   <div class="doc-foot">
-    <button type="button" id="doc-close" data-t="docClose"></button>
+    <button type="button" id="doc-close" data-t="docClose">Schließen</button>
   </div>
 </dialog>
 
@@ -261,24 +261,24 @@
   </div>
   <div class="doc-body"><p id="help-body"></p></div>
   <div class="doc-foot">
-    <button type="button" id="help-close" data-t="docClose"></button>
+    <button type="button" id="help-close" data-t="docClose">Schließen</button>
   </div>
 </dialog>
 
 <dialog id="confirm" aria-labelledby="confirm-title">
   <div class="doc-head">
-    <h3 id="confirm-title" data-t="confirmTitle"></h3>
+    <h3 id="confirm-title" data-t="confirmTitle">Wirklich senden?</h3>
     <button type="button" id="confirm-x">&times;</button>
   </div>
   <div class="doc-body"><p id="confirm-body"></p></div>
   <div class="doc-foot doc-foot-2">
-    <button type="button" id="confirm-no" data-t="confirmNo"></button>
-    <button type="button" class="primary" id="confirm-yes" data-t="confirmYes"></button>
+    <button type="button" id="confirm-no" data-t="confirmNo">Abbrechen</button>
+    <button type="button" class="primary" id="confirm-yes" data-t="confirmYes">Senden</button>
   </div>
 </dialog>
 
-<script src="report-footer.js?v=10"></script>
-<script src="i18n.js?v=10"></script>
-<script src="app.js?v=10"></script>
+<script src="report-footer.js?v=11"></script>
+<script src="i18n.js?v=11"></script>
+<script src="app.js?v=11"></script>
 </body>
 </html>
